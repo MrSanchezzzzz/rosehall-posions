@@ -19,19 +19,18 @@
       padding: 32px 20px 48px;
     }
     .page-header h1 {
-      margin: 0;
       font-size: clamp(2rem, 4vw, 2.75rem);
     }
     .page-header p {
       color: #cbd5f5;
+      margin: 0;
       max-width: 750px;
-      margin: 8px 0 28px;
     }
     .filters {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
       background: rgba(15, 23, 42, 0.85);
+      margin-top: 2em;
       border: 1px solid rgba(148, 163, 184, 0.15);
       padding: 20px;
       border-radius: 16px;
@@ -51,7 +50,7 @@
       letter-spacing: 0.12em;
       color: #94a3b8;
     }
-    .filter-group input,
+      .filter-group input,
     .filter-group select {
       border: 1px solid rgba(148, 163, 184, 0.35);
       border-radius: 10px;
@@ -66,6 +65,83 @@
       outline: none;
       border-color: #7dd3fc;
       box-shadow: 0 0 0 2px rgba(125, 211, 252, 0.2);
+    }
+    .filter-row {
+      display: grid;
+      gap: 16px;
+      grid-column: 1 / -1;
+    }
+    .filter-row.triple {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    .filter-row.flex {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      align-items: end;
+    }
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 10px;
+      min-height: 60px;
+      background: #0f172a;
+    }
+    .chip {
+      border: none;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      background: rgba(148, 163, 184, 0.15);
+      color: #e2e8f0;
+      transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+    }
+    .chip:hover {
+      background: rgba(56, 189, 248, 0.25);
+      color: #38bdf8;
+    }
+    .chip.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+    .tag-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 6px;
+      font-size: 0.8rem;
+    }
+    .tag-controls span {
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.7rem;
+    }
+    .toggle-group {
+      display: inline-flex;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .toggle-button {
+      border: none;
+      background: transparent;
+      color: #e2e8f0;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .toggle-button.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+    }
+    .toggle-button:not(.active):hover {
+      background: rgba(56, 189, 248, 0.1);
     }
     .tri-control {
       display: flex;
@@ -167,42 +243,60 @@
   <div class="app">
     <header class="page-header">
       <h1>Арсенал отрут</h1>
-      <p>Фільтруй, сортуй та плануй застосування алхімічних і отруйних засобів без додаткових залежностей. Усі дані вже всередині сторінки.</p>
+      <p style="font-style: italic;">У Рокільдсонів завжди знайдеться чим здивувати.</p>
+      <p style="font-style: italic;">- Чертатікус Рогатікус</p>
     </header>
     <section class="filters">
       <div class="filter-group">
         <label for="nameFilter">Назва</label>
         <input type="text" id="nameFilter" placeholder="Шукати за назвою" />
       </div>
-      <div class="filter-group">
-        <label for="typeFilter">Тип</label>
-        <select id="typeFilter"></select>
-      </div>
-      <div class="filter-group">
-        <label for="methodFilter">Спосіб</label>
-        <select id="methodFilter"></select>
-      </div>
-      <div class="filter-group">
-        <label for="applicationFilter">Застосування</label>
-        <select id="applicationFilter"></select>
-      </div>
-      <div class="filter-group">
-        <label for="complexityValue">Складність</label>
-        <div class="tri-control">
-          <select id="complexityCompare">
-            <option value="greater">≥</option>
-            <option value="less">≤</option>
-          </select>
-          <input type="number" id="complexityValue" placeholder="число" min="0" />
+      <div class="filter-row triple">
+        <div class="filter-group">
+          <label for="typeFilter">Тип</label>
+          <select id="typeFilter"></select>
+        </div>
+        <div class="filter-group">
+          <label for="methodFilter">Спосіб</label>
+          <select id="methodFilter"></select>
+        </div>
+        <div class="filter-group">
+          <label for="applicationFilter">Застосування</label>
+          <select id="applicationFilter"></select>
         </div>
       </div>
-      <div class="filter-group">
-        <span class="label">Імба</span>
-        <button type="button" class="tri-state state-any" id="imbaFilter" data-filter="imba" data-state="any">Усі</button>
+      <div class="filter-row flex">
+        <div class="filter-group">
+          <label for="complexityValue">Складність</label>
+          <div class="tri-control">
+            <select id="complexityCompare">
+              <option value="greater">≥</option>
+              <option value="less">≤</option>
+            </select>
+            <input type="number" id="complexityValue" placeholder="число" min="0" />
+          </div>
+        </div>
+        <div class="filter-group">
+          <span class="label">Імба</span>
+          <button type="button" class="tri-state state-any" id="imbaFilter" data-filter="imba" data-state="any">Усі</button>
+        </div>
+        <div class="filter-group">
+          <span class="label">Планую використати</span>
+          <button type="button" class="tri-state state-any" id="planFilter" data-filter="plan" data-state="any">Усі</button>
+        </div>
       </div>
-      <div class="filter-group">
-        <span class="label">Планую використати</span>
-        <button type="button" class="tri-state state-any" id="planFilter" data-filter="plan" data-state="any">Усі</button>
+      <div class="filter-group full-width">
+        <label>Теги</label>
+        <div class="chip-list" id="tagChips"></div>
+      </div>
+      <div class="filter-group full-width">
+        <div class="tag-controls">
+          <span>Логіка</span>
+          <div class="toggle-group" id="tagModeToggle">
+            <button type="button" class="toggle-button active" data-tag-mode="or">АБО</button>
+            <button type="button" class="toggle-button" data-tag-mode="and">І</button>
+          </div>
+        </div>
       </div>
     </section>
     <div class="table-wrapper">
@@ -1433,6 +1527,7 @@
     const tableBody = document.getElementById('tableBody');
     const emptyState = document.getElementById('emptyState');
     const headerCells = document.querySelectorAll('th[data-key]');
+    const tagChipsContainer = document.getElementById('tagChips');
     const columns = [
       'Назва',
       'Тип',
@@ -1450,6 +1545,8 @@
       type: '',
       method: '',
       application: '',
+      tags: [],
+      tagMode: 'or',
       complexityValue: '',
       complexityCompare: 'greater',
       imba: 'any',
@@ -1465,6 +1562,7 @@
       populateDropdown('typeFilter', uniqueValues('Тип'));
       populateDropdown('methodFilter', uniqueValues('Спосіб нанесення'));
       populateDropdown('applicationFilter', uniqueApplications());
+      renderTagChips(uniqueTags());
       document.getElementById('nameFilter').addEventListener('input', (event) => {
         filters.name = event.target.value.trim().toLowerCase();
         renderRows();
@@ -1480,6 +1578,9 @@
       document.getElementById('applicationFilter').addEventListener('change', (event) => {
         filters.application = event.target.value;
         renderRows();
+      });
+      document.querySelectorAll('[data-tag-mode]').forEach((button) => {
+        button.addEventListener('click', () => setTagMode(button.dataset.tagMode));
       });
       document.getElementById('complexityCompare').addEventListener('change', (event) => {
         filters.complexityCompare = event.target.value;
@@ -1513,6 +1614,52 @@
         (item['Застосування'] || []).forEach((entry) => values.add(entry));
       });
       return Array.from(values).sort((a, b) => a.localeCompare(b, 'uk'));
+    }
+
+    function uniqueTags() {
+      const values = new Set();
+      potions.forEach((item) => {
+        (item['Теги'] || []).forEach((entry) => values.add(entry));
+      });
+      return Array.from(values).sort((a, b) => a.localeCompare(b, 'uk'));
+    }
+
+    function renderTagChips(tags) {
+      tagChipsContainer.innerHTML = '';
+      tags.forEach((tag) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'chip';
+        button.textContent = tag;
+        if (filters.tags.includes(tag)) {
+          button.classList.add('active');
+        }
+        button.addEventListener('click', () => toggleTag(tag, button));
+        tagChipsContainer.appendChild(button);
+      });
+    }
+
+    function toggleTag(tag, button) {
+      const index = filters.tags.indexOf(tag);
+      if (index >= 0) {
+        filters.tags.splice(index, 1);
+        button.classList.remove('active');
+      } else {
+        filters.tags.push(tag);
+        button.classList.add('active');
+      }
+      renderRows();
+    }
+
+    function setTagMode(mode) {
+      if (filters.tagMode === mode) {
+        return;
+      }
+      filters.tagMode = mode;
+      document.querySelectorAll('[data-tag-mode]').forEach((button) => {
+        button.classList.toggle('active', button.dataset.tagMode === mode);
+      });
+      renderRows();
     }
 
     function cycleTriState(button) {
@@ -1576,6 +1723,16 @@
         }
         if (filters.application && !(item['Застосування'] || []).includes(filters.application)) {
           return false;
+        }
+        if (filters.tags.length) {
+          const tags = item['Теги'] || [];
+          if (filters.tagMode === 'and') {
+            if (!filters.tags.every((tag) => tags.includes(tag))) {
+              return false;
+            }
+          } else if (!filters.tags.some((tag) => tags.includes(tag))) {
+            return false;
+          }
         }
         if (filters.complexityValue !== '') {
           const value = Number(filters.complexityValue);
@@ -1658,3 +1815,6 @@
   </script>
 </body>
 </html>
+    .filter-group.full-width {
+      grid-column: 1 / -1;
+    }
