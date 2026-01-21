@@ -38,6 +38,9 @@
       box-shadow: 0 10px 40px rgba(15, 23, 42, 0.45);
       backdrop-filter: blur(6px);
     }
+    .filter-group.full-width {
+      grid-column: 1 / -1;
+    }
     .filter-group {
       display: flex;
       flex-direction: column;
@@ -178,13 +181,16 @@
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(148, 163, 184, 0.15);
       border-radius: 16px;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
       box-shadow: 0 30px 80px rgba(2, 6, 23, 0.65);
     }
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.95rem;
+      min-width: 980px;
     }
     thead th {
       position: sticky;
@@ -219,7 +225,23 @@
     tbody tr:hover {
       background: rgba(56, 189, 248, 0.08);
     }
-    .empty {
+    
+    
+tbody tr.tracked-row td {
+  border-top: 2px solid rgba(96, 165, 250, 0.95);
+  border-bottom: 2px solid rgba(96, 165, 250, 0.95);
+}
+tbody tr.tracked-row td:first-child {
+  border-left: 2px solid rgba(96, 165, 250, 0.95);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+tbody tr.tracked-row td:last-child {
+  border-right: 2px solid rgba(96, 165, 250, 0.95);
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.empty {
       margin: 0;
       padding: 22px;
       text-align: center;
@@ -237,12 +259,233 @@
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       }
     }
+
+    /* tracker (easter egg) */
+    .page-header h1 {
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tracker-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      background: rgba(2, 6, 23, 0.66);
+      backdrop-filter: blur(6px);
+      padding: 14px;
+      z-index: 50;
+    }
+    .tracker-overlay.active {
+      display: flex;
+    }
+    .tracker-sheet {
+      width: min(720px, 100%);
+      max-height: min(90vh, 760px);
+      display: flex;
+      flex-direction: column;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 18px;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.65);
+      overflow: hidden;
+    }
+    .tracker-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      background: rgba(2, 6, 23, 0.62);
+    }
+    .tracker-handle {
+      width: 52px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.35);
+      margin: 2px auto 12px;
+    }
+    .tracker-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .tracker-title-row h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e2e8f0;
+    }
+    .tracker-sub {
+      margin: 8px 0 0;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    .tracker-close {
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(148, 163, 184, 0.08);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .tracker-close:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .tracker-list {
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tracker-empty {
+      padding: 10px 12px;
+      border: 1px dashed rgba(148, 163, 184, 0.25);
+      border-radius: 14px;
+      color: #94a3b8;
+      background: rgba(148, 163, 184, 0.05);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+    .tracker-item {
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.55);
+      overflow: hidden;
+    }
+    .tracker-summary {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+    }
+    .tracker-main {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+    .tracker-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .tracker-meta {
+      color: #94a3b8;
+      font-size: 0.86rem;
+    }
+
+.tracker-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tracker-icon-btn {
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(148, 163, 184, 0.08);
+  color: #e2e8f0;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+.tracker-icon-btn:hover {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+}
+.tracker-remove-icon {
+  border-color: rgba(244, 114, 182, 0.35);
+  background: rgba(244, 114, 182, 0.10);
+  color: #fbcfe8;
+}
+.tracker-remove-icon:hover {
+  background: rgba(244, 114, 182, 0.18);
+  border-color: rgba(244, 114, 182, 0.45);
+}
+    
+.tracker-chevron {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+    .tracker-item[data-open="true"] .tracker-chevron {
+      transform: rotate(180deg);
+    }
+    .tracker-details {
+      display: none;
+      padding: 0 12px 12px;
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
+      color: #e2e8f0;
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+    .tracker-item[data-open="true"] .tracker-details {
+      display: block;
+    }
+    .tracker-details .detail-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: rgba(148, 163, 184, 0.08);
+      color: #e2e8f0;
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+        .tracker-footer {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: rgba(2, 6, 23, 0.62);
+    }
+    .tracker-clear {
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(148, 163, 184, 0.08);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .tracker-clear:hover {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+    .tracker-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      color: #e2e8f0;
+      font-size: 0.9rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 60;
+      max-width: min(520px, 94vw);
+      text-align: center;
+    }
+    .tracker-toast.active {
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="page-header">
-      <h1>Арсенал отрут</h1>
+      <h1 id="pageTitle">Арсенал отрут</h1>
       <p style="font-style: italic;">У Рокільдсонів завжди знайдеться чим здивувати.</p>
       <p style="font-style: italic;">- Чертатікус Рогатікус</p>
     </header>
@@ -299,7 +542,7 @@
         </div>
       </div>
     </section>
-    <div class="table-wrapper">
+    <div class="table-wrapper" id="tableWrapper">
       <table>
         <thead>
           <tr>
@@ -320,6 +563,27 @@
       <p class="empty" id="emptyState">Нічого не знайдено. Спробуй змінити критерії.</p>
     </div>
   </div>
+
+  <!-- Tracker overlay (easter egg) -->
+  <div class="tracker-overlay" id="trackerOverlay" aria-hidden="true">
+    <div class="tracker-sheet" role="dialog" aria-modal="true" aria-label="Poison tracker">
+      <div class="tracker-header">
+        <div class="tracker-handle" aria-hidden="true"></div>
+        <div class="tracker-title-row">
+          <h2>Трекер</h2>
+          <button type="button" class="tracker-close" id="trackerClose" aria-label="Закрити">✕</button>
+        </div>
+        <p class="tracker-sub">Без дублікатів: 1 запис на кожну отруту.</p>
+      </div>
+      <div class="tracker-list" id="trackerList"></div>
+      <div class="tracker-footer">
+        <div style="color:#94a3b8;font-size:0.85rem;">Збереження: автоматичне</div>
+        <button type="button" class="tracker-clear" id="trackerClear">Очистити</button>
+      </div>
+    </div>
+  </div>
+  <div class="tracker-toast" id="trackerToast"></div>
+
   <script>
     const potions = [
   {
@@ -1528,6 +1792,25 @@
     const emptyState = document.getElementById('emptyState');
     const headerCells = document.querySelectorAll('th[data-key]');
     const tagChipsContainer = document.getElementById('tagChips');
+
+    // Stable id for each poison (stored in localStorage to save memory)
+    function makePotionId(name) {
+      return String(name || '')
+        .normalize('NFKD')
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}]+/gu, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    potions.forEach((p, idx) => {
+      const base = p['Назва'] || String(idx);
+      p.__id = makePotionId(base) || `poison-${idx}`;
+    });
+
+    const potionById = new Map(potions.map((p) => [p.__id, p]));
+    const potionByName = new Map(potions.map((p) => [p['Назва'], p]));
+
     const columns = [
       'Назва',
       'Тип',
@@ -1556,9 +1839,269 @@
     const triCycle = ['any', 'true', 'false'];
     const triLabels = { any: 'Усі', true: 'Так', false: 'Ні' };
 
-    init();
+    
+/* --- Tracker (easter egg) ---
+   Правило: можна трекати багато отрут, але без дублікатів (1 запис на кожну отруту).
+   Зберігаємо тільки ID у localStorage.
+*/
+const TRACKER_STORAGE_KEY = 'arsenal_poison_tracker_v2';
+const TRACKER_STORAGE_KEY_V1 = 'arsenal_poison_tracker_v1';
+
+const trackerOverlay = document.getElementById('trackerOverlay');
+const trackerList = document.getElementById('trackerList');
+const trackerClose = document.getElementById('trackerClose');
+const trackerClear = document.getElementById('trackerClear');
+const trackerToast = document.getElementById('trackerToast');
+const pageTitle = document.getElementById('pageTitle');
+
+let trackerState = new Set(loadTrackerIds());
+
+function loadTrackerIds() {
+  const candidates = [];
+
+  // Prefer v2
+  candidates.push(...readTrackerRaw(TRACKER_STORAGE_KEY));
+  if (!candidates.length) {
+    candidates.push(...readTrackerRaw(TRACKER_STORAGE_KEY_V1));
+  }
+
+  const resolved = [];
+  candidates.forEach((stored) => {
+    if (!stored) return;
+    if (potionById.has(stored)) {
+      resolved.push(stored);
+      return;
+    }
+    const byName = potionByName.get(stored) || potions.find((p) => p['Назва'] === stored);
+    if (byName && byName.__id) {
+      resolved.push(byName.__id);
+    }
+  });
+
+  return Array.from(new Set(resolved));
+}
+
+function readTrackerRaw(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+
+    // v2: array of ids
+    if (Array.isArray(parsed)) {
+      return parsed.filter((x) => typeof x === 'string' && x.trim().length);
+    }
+
+    // v1: object map (type -> id/name)
+    if (parsed && typeof parsed === 'object') {
+      return Object.values(parsed).filter((x) => typeof x === 'string' && x.trim().length);
+    }
+
+    return [];
+  } catch {
+    return [];
+  }
+}
+
+function saveTracker() {
+  try {
+    localStorage.setItem(TRACKER_STORAGE_KEY, JSON.stringify([...trackerState]));
+  } catch {
+    // ignore
+  }
+}
+
+function isTrackerOpen() {
+  return trackerOverlay.classList.contains('active');
+}
+
+function openTracker() {
+  trackerOverlay.classList.add('active');
+  trackerOverlay.setAttribute('aria-hidden', 'false');
+  renderTracker();
+}
+
+function closeTracker() {
+  trackerOverlay.classList.remove('active');
+  trackerOverlay.setAttribute('aria-hidden', 'true');
+  hideToast();
+}
+
+function toast(message) {
+  if (!trackerToast) return;
+  trackerToast.textContent = message;
+  trackerToast.classList.add('active');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(hideToast, 1200);
+}
+
+function hideToast() {
+  if (!trackerToast) return;
+  trackerToast.classList.remove('active');
+}
+
+function addToTracker(item) {
+  const id = item.__id || makePotionId(item['Назва'] || '');
+  trackerState.add(id);
+  saveTracker();
+  renderTracker();
+  renderRows();
+  toast(`Додано: ${item['Назва']}`);
+}
+
+function removeFromTracker(id, nameForToast) {
+  trackerState.delete(id);
+  saveTracker();
+  renderTracker();
+  renderRows();
+  if (nameForToast) toast(`Прибрано: ${nameForToast}`);
+}
+
+function toggleTracker(item) {
+  const id = item.__id || makePotionId(item['Назва'] || '');
+  const name = item['Назва'] || '';
+  if (trackerState.has(id)) {
+    removeFromTracker(id, name);
+  } else {
+    addToTracker(item);
+  }
+}
+
+function clearTracker() {
+  trackerState.clear();
+  saveTracker();
+  renderTracker();
+  renderRows();
+  toast('Очищено');
+}
+
+function renderTracker() {
+  if (!trackerList) return;
+
+  const ids = [...trackerState];
+  trackerList.innerHTML = '';
+
+  if (!ids.length) {
+    const empty = document.createElement('div');
+    empty.className = 'tracker-empty';
+    empty.textContent = 'Порожньо. Двічі клікни по рядку таблиці, щоб додати отруту.';
+    trackerList.appendChild(empty);
+    return;
+  }
+
+  const items = ids
+    .map((id) => potionById.get(id))
+    .filter(Boolean)
+    .sort((a, b) => String(a['Назва']).localeCompare(String(b['Назва']), 'uk'));
+
+  // Cleanup stale ids
+  if (items.length !== ids.length) {
+    trackerState = new Set(items.map((it) => it.__id));
+    saveTracker();
+  }
+
+  items.forEach((item) => {
+    const card = document.createElement('div');
+    card.className = 'tracker-item';
+    card.dataset.open = 'false';
+
+    const summary = document.createElement('div');
+    summary.className = 'tracker-summary';
+
+    const main = document.createElement('div');
+    main.className = 'tracker-main';
+
+    const name = document.createElement('div');
+    name.className = 'tracker-name';
+    name.textContent = item['Назва'] || '';
+
+    const meta = document.createElement('div');
+    meta.className = 'tracker-meta';
+    const dc = item['Складність кидка'] ?? '—';
+    const method = item['Спосіб нанесення'] || 'невідомо';
+    meta.textContent = `DC ${dc} • ${method}`;
+
+    main.appendChild(name);
+    main.appendChild(meta);
+
+    const controls = document.createElement('div');
+    controls.className = 'tracker-controls';
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'tracker-icon-btn tracker-remove-icon';
+    removeBtn.setAttribute('aria-label', 'Прибрати');
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      removeFromTracker(item.__id, item['Назва']);
+    });
+
+    const chevron = document.createElement('button');
+    chevron.type = 'button';
+    chevron.className = 'tracker-icon-btn tracker-chevron';
+    chevron.setAttribute('aria-label', 'Розгорнути');
+    chevron.textContent = '⌄';
+    chevron.addEventListener('click', (event) => {
+      event.stopPropagation();
+      card.dataset.open = card.dataset.open === 'true' ? 'false' : 'true';
+    });
+
+    controls.appendChild(removeBtn);
+    controls.appendChild(chevron);
+
+    summary.appendChild(main);
+    summary.appendChild(controls);
+
+    const details = document.createElement('div');
+    details.className = 'tracker-details';
+    details.innerHTML = `
+      <div class="detail-row">
+        <span class="pill">Тип: ${formatValue(item['Тип'])}</span>
+        <span class="pill">Ціна: ${formatValue(item['Ціна'])}</span>
+        <span class="pill">Імба: ${formatValue(item['Імба'])}</span>
+        <span class="pill">Планую: ${formatValue(item['Планую використати'])}</span>
+      </div>
+      <div style="margin-top:10px;color:#cbd5f5;">${formatValue(item['Ефект'])}</div>
+      <div class="detail-row">
+        ${(item['Застосування'] || []).map((a) => `<span class="pill">${a}</span>`).join('')}
+        ${(item['Теги'] || []).map((t) => `<span class="pill">${t}</span>`).join('')}
+      </div>
+    `;
+
+    card.appendChild(summary);
+    card.appendChild(details);
+    trackerList.appendChild(card);
+  });
+}
+
+init();
 
     function init() {
+      // open tracker via title (no visible hint)
+      if (pageTitle) {
+        pageTitle.addEventListener('click', () => openTracker());
+      }
+      if (trackerClose) {
+        trackerClose.addEventListener('click', closeTracker);
+      }
+      if (trackerClear) {
+        trackerClear.addEventListener('click', clearTracker);
+      }
+      if (trackerOverlay) {
+        // click outside sheet closes
+        trackerOverlay.addEventListener('click', (event) => {
+          if (event.target === trackerOverlay) {
+            closeTracker();
+          }
+        });
+      }
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && isTrackerOpen()) {
+          closeTracker();
+        }
+      });
+
       populateDropdown('typeFilter', uniqueValues('Тип'));
       populateDropdown('methodFilter', uniqueValues('Спосіб нанесення'));
       populateDropdown('applicationFilter', uniqueApplications());
@@ -1699,6 +2242,34 @@
       const fragment = document.createDocumentFragment();
       sorted.forEach((item) => {
         const row = document.createElement('tr');
+        // Highlight in table if currently tracked
+        if (trackerState.has(item.__id)) {
+          row.classList.add('tracked-row');
+        }
+
+// Double click / double tap toggles tracking for this poison
+        row.addEventListener('dblclick', (event) => {
+          event.preventDefault();
+          toggleTracker(item);
+          try { window.getSelection && window.getSelection().removeAllRanges(); } catch {}
+        });
+
+        // Better support for mobile: double tap detection
+        let lastTap = 0;
+        row.addEventListener('pointerdown', (event) => {
+          if (event.pointerType !== 'touch') return;
+          const now = Date.now();
+          if (now - lastTap < 350) {
+            event.preventDefault();
+            toggleTracker(item);
+            try { window.getSelection && window.getSelection().removeAllRanges(); } catch {}
+            lastTap = 0;
+          } else {
+            lastTap = now;
+          }
+        });
+
+
         columns.forEach((column) => {
           const cell = document.createElement('td');
           cell.textContent = formatValue(item[column]);
@@ -1815,6 +2386,3 @@
   </script>
 </body>
 </html>
-    .filter-group.full-width {
-      grid-column: 1 / -1;
-    }
